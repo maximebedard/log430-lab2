@@ -73,8 +73,15 @@ public class AssignResourceToProject extends Communication
 					 * If the selected project and resource exist, then complete
 					 * the assignment process.
 					 */
-					myProject.assignResource(myResource);
-					myResource.assignProject(myProject);
+                    if(myResource.canAcceptMoreWork(myProject)){
+                        myProject.assignResource(myResource);
+                        myResource.assignProject(myProject);
+
+                    } else{
+                        System.out.println("\n\n *** WARNING : Workload for " + myResource.getID() + " exceeds 100% ***");
+                    }
+
+
 				} else {
 					System.out.println("\n\n *** Project not found ***");
 				} 

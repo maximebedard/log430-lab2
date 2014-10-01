@@ -1,6 +1,11 @@
 package ca.etsmtl.log430.common;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /** This class defines the Project object for the system.
 * 
 * @author A.J. Lattanze, CMU
@@ -125,5 +130,45 @@ public class Project {
 	public ResourceList getResourcesAssigned() {
 		return resourcesAssigned;
 	}
+
+    public int getRessourceOccupation(){
+        int ressourceOccupation = 0;
+        this.getEndDate();
+
+        try {
+            Date today = new Date();
+
+            System.out.println(this.getEndDate());
+            Date projectEndDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(this.getEndDate());
+            Date projectStartDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(this.getStartDate());
+
+            if(today.after(projectEndDate) || today.before(projectStartDate)){
+                ressourceOccupation = 0;
+            }
+            else{
+                switch (this.getPriority().charAt(0)) {
+                    case 'H':
+                        ressourceOccupation = 100;
+                        break;
+                    case 'M':
+                        ressourceOccupation = 50;
+                        break;
+                    case 'L':
+                        ressourceOccupation = 25;
+                        break;
+
+                }
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+
+
+
+
+        return ressourceOccupation;
+    }
 
 } // Project class
