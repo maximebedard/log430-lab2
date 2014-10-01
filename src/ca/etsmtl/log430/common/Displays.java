@@ -167,6 +167,42 @@ public class Displays {
 
 	}
 
+
+
+    public void displayProjectsAlreadyAssignedToResource(Resource resource)
+    {
+
+        boolean done;
+        Project project;
+
+        System.out.println("\nProjects assigned (previous session) to : "
+                + resource.getFirstName() + " " + resource.getLastName() + " "
+                + resource.getID());
+        lineCheck(2);
+        System.out.println("========================================================= ");
+        lineCheck(1);
+
+        resource.getPreviouslyAssignedProjectList().goToFrontOfList();
+        done = false;
+
+        while (!done) {
+
+            project = resource.getPreviouslyAssignedProjectList().getNextProject();
+
+            if (project == null) {
+
+                done = true;
+
+            } else {
+
+                displayProject(project);
+                lineCheck(2);
+
+            } // if
+
+        } // while
+    }
+
 	/**
 	 * Displays the resources in a resource list. Displays the same information
 	 * that is listed in the displayResource() method listed above.
@@ -239,5 +275,102 @@ public class Displays {
 		} // while
 
 	}
+
+    /**
+     * Displays roles associated to a specific project.
+     * Displays the associated project's roles before and during the current execution.
+     *
+     * @param project
+     * @param resourceList
+     */
+    public void displayRolesOfProject(Project project, ResourceList resourceList) {
+        /*
+        System.out.println();
+        this.displayProject(project); */
+
+        System.out.println();
+        resourceList.goToFrontOfList();
+        this.displayRolesOfPreviouslyAssignedProjectList(project, resourceList);
+
+        System.out.println();
+        resourceList.goToFrontOfList();
+        this.displayRolesOfCurrentlyAssignedProjectList(project, resourceList);
+    }
+
+    /**
+     * Displays roles associated to a specific project before the current execution.
+     *
+     * @param project
+     * @param resourceList
+     */
+    public void displayRolesOfPreviouslyAssignedProjectList(Project project, ResourceList resourceList)
+    {
+        System.out.println("Previously assigned roles of : " +
+                project.getID() + " " +
+                project.getProjectName());
+        System.out.println("========================================================= ");
+
+        Resource currentResource = null;
+        java.util.List<String> distinctRoleList = new java.util.ArrayList<String>();
+
+        while ((currentResource = resourceList.getNextResource()) != null)
+        {
+            if(currentResource.getPreviouslyAssignedProjectList().findProject(project))
+            {
+                if (!distinctRoleList.contains(currentResource.getRole()))
+                {
+                    distinctRoleList.add(currentResource.getRole());
+                    System.out.println(currentResource.getRole());
+                }
+            }
+        }
+
+        if (distinctRoleList.size() == 0)
+        {
+            System.out.println("No roles to display.");
+        }
+        else
+        {
+            System.out.println(distinctRoleList.size() + " previously assigned role" + (distinctRoleList.size() > 1 ? "s" : ""));
+        }
+    }
+
+    /**
+     * Displays roles associated to a specific project assigned during the current execution.
+     *
+     * @param project
+     * @param resourceList
+     */
+    public void displayRolesOfCurrentlyAssignedProjectList(Project project, ResourceList resourceList)
+    {
+        System.out.println("Currently assigned roles of :  " +
+                project.getID() + " " +
+                project.getProjectName());
+        System.out.println("========================================================= ");
+
+        Resource currentResource = null;
+        java.util.List<String> distinctRoleList = new java.util.ArrayList<String>();
+
+        while ((currentResource = resourceList.getNextResource()) != null)
+        {
+            if(currentResource.getProjectsAssigned().findProject(project))
+            {
+                if (!distinctRoleList.contains(currentResource.getRole()))
+                {
+                    distinctRoleList.add(currentResource.getRole());
+                    System.out.println(currentResource.getRole());
+                }
+            }
+        }
+
+        if (distinctRoleList.size() == 0)
+        {
+            System.out.println("No roles to display.");
+        }
+        else
+        {
+            System.out.println(distinctRoleList.size() + " currently assigned role" + (distinctRoleList.size() > 1 ? "s" : ""));
+        }
+    }
 
 } // Display

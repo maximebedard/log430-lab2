@@ -1,7 +1,6 @@
 package ca.etsmtl.log430.lab2;
 
-import ca.etsmtl.log430.common.ProjectReader;
-import ca.etsmtl.log430.common.ResourceReader;
+import ca.etsmtl.log430.common.*;
 
 /**
  * Contains data that is used (directly or indirectly) by all
@@ -52,7 +51,7 @@ public class CommonData {
 	public CommonData() {
 		if (!initialized) {
 			theListOfProjects = new ProjectReader(defaultProjectFile);
-			theListOfResources = new ResourceReader(defaultResourceFile);
+			theListOfResources = new ResourceReader(defaultResourceFile, theListOfProjects);
 			systemComponents = new ComponentList();
 			initialized = true;
 		} // if
@@ -65,6 +64,7 @@ public class CommonData {
 		if (theListOfResources.getListOfResources() == null) {
 			System.out.println("\n\n *** The resource list is empty ***");
 		}
+
 	}
 
 	/**

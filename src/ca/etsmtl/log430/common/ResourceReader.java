@@ -56,16 +56,18 @@ public class ResourceReader extends LineOfTextFileReader {
 	 * The list of drivers.
 	 */
 	private ResourceList listOfResources = new ResourceList();
+    private ProjectReader projectReader;
 
-	public ResourceReader() {
+    public ResourceReader() {
 
 		listOfResources = null;
+        projectReader = null;
 
 	} // Constructor #1
 
-	public ResourceReader(String inputFile) {
-
-		listOfResources = readResourceListFromFile(inputFile);
+	public ResourceReader(String inputFile, ProjectReader projectReader) {
+        this.projectReader = projectReader;
+        listOfResources = readResourceListFromFile(inputFile);
 
 	} // Constructor #2
 
@@ -202,7 +204,19 @@ public class ResourceReader extends LineOfTextFileReader {
 				// This is where the projects are added to the list of projects
 				// previously assigned to this resource. Note that there are
 				// no details other than the project ID.
-				resource.getPreviouslyAssignedProjectList().addProject(new Project(token));
+
+                if(token != null && !token.isEmpty()) {
+
+                    Project previouslyAssignedProject = projectReader.getListOfProjects().findProjectByID(token);
+
+                    if (previouslyAssignedProject == null) {
+                        resource.getPreviouslyAssignedProjectList().addProject(new Project(token));
+                    } else {
+                        resource.getPreviouslyAssignedProjectList().addProject(previouslyAssignedProject);
+                    }
+                }
+
+                //resource.getPreviouslyAssignedProjectList().addProject(new Project(token));
 				frontIndex = backIndex + 1;
 				break;
 
