@@ -137,8 +137,6 @@ public class Project {
 
         try {
             Date today = new Date();
-
-            System.out.println(this.getEndDate());
             Date projectEndDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(this.getEndDate());
             Date projectStartDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(this.getStartDate());
 
@@ -162,6 +160,8 @@ public class Project {
 
         } catch (ParseException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (NullPointerException e){
+            System.out.println("** WARNING : Project " + this.getID() + " not found!");
         }
 
 

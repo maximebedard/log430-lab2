@@ -78,7 +78,7 @@ public class AssignResourceToProject extends Communication
                         myResource.assignProject(myProject);
 
                     } else{
-                        System.out.println("\n\n *** WARNING : Workload for " + myResource.getID() + " exceeds 100% ***");
+                        System.out.println("\n\n *** WARNING : Workload for " + myResource.getID() + " exceeds 100%. Operation aborted. ***");
                     }
 
 
