@@ -1,5 +1,6 @@
 package ca.etsmtl.log430.common;
 
+import java.util.*;
 
 /**
  * This class presents the user with menus, accepts their choice, ensures their
@@ -49,24 +50,22 @@ public class Menus {
 			System.out.println("3) List projects currently assigned to a resource");
 			System.out.println("4) List resources currently assigned to a project");
 			System.out.println("5) Assign a resource to a project");
+            System.out.println("6) List projects already assigned to a resource (before session)");
+            System.out.println("7) List all roles assigned to a specific project");
 			System.out.println("X) Exit");
 			System.out.print("\n\nEnter your choice and press return >> ");
 
 			userChoice = terminal.keyboardReadChar();
 
-			if ((userChoice != 'X') && (userChoice != 'x')
-					&& (userChoice < '1') && (userChoice != '2')
-					&& (userChoice != '3') && (userChoice < '4')
-					&& (userChoice != '5')) {
-
-				System.out.print("\n\n*** Invalid Choice:: " + userChoice
-						+ " ***");
-
-			} else {
-
-				error = false;
-
-			} // if
+            java.util.List<Character> validChars = Arrays.asList('X', 'x', '1', '2', '3', '4', '5', '6', '7');
+            if (validChars.contains(userChoice))
+            {
+                error = false;
+            }
+            else
+            {
+                System.out.print("\n\n*** Invalid Choice:: " + userChoice + " ***");
+            } // if
 
 		} // while
 

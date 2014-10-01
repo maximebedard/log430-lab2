@@ -86,6 +86,10 @@ public class Executive extends Communication {
 
             case '6':
                 signalReceivers("ListExistingProjectsForResource");
+                break;
+            case '7':
+                signalReceivers("ListPreviousAndCurrentlyAssignedRoles");
+                break;
 
 			case 'X':
 			case 'x':
