@@ -59,6 +59,7 @@ public class Executive extends Communication {
 		addToReceiverList("ListResourcesAssignedToProjectComponent");
 		addToReceiverList("AssignResourceToProject");
         addToReceiverList("ListExistingProjectsForResource");
+        addToReceiverList("ListPreviousAndCurrentlyAssignedRoles");
 
 		while (!done) {
 			userChoice = menu.mainMenu();
