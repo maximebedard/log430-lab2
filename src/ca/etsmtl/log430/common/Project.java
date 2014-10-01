@@ -115,6 +115,21 @@ public class Project {
 		return endDate;
 	}
 
+    public Date getParsedEndDate(){
+        try {
+            return  new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(this.getEndDate());
+        } catch (ParseException e){
+            return null;
+        }
+    }
+    public Date getParsedStartDate(){
+        try {
+            return  new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(this.getStartDate());
+        } catch (ParseException e){
+            return null;
+        }
+    }
+
 	public String getPriority() {
 		return priority;
 	}
@@ -137,8 +152,8 @@ public class Project {
 
         try {
             Date today = new Date();
-            Date projectEndDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(this.getEndDate());
-            Date projectStartDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(this.getStartDate());
+            Date projectEndDate = getParsedEndDate();
+            Date projectStartDate = getParsedStartDate();
 
             if(today.after(projectEndDate) || today.before(projectStartDate)){
                 ressourceOccupation = 0;
@@ -158,8 +173,6 @@ public class Project {
                 }
             }
 
-        } catch (ParseException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (NullPointerException e){
             System.out.println("** WARNING : Project " + this.getID() + " not found!");
         }

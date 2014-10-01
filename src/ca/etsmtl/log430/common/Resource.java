@@ -1,6 +1,11 @@
 package ca.etsmtl.log430.common;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * This class defines the Resource object for the system. Besides the basic
  * attributes, there are two lists maintained. alreadyAssignedProjectList is a
@@ -128,25 +133,117 @@ public class Resource {
     public boolean canAcceptMoreWork(Project toBeAssignedProject){
 
         Project p = null;
-        int ressourceOccupation = toBeAssignedProject.getRessourceOccupation();
+        int ressourceOccupation;
         boolean canAcceptWork = true;
 
+        ProjectList allProjects = this.alreadyAssignedProjectList;
 
-        ressourceOccupation += countRessourceOccupation(this.alreadyAssignedProjectList);
-        ressourceOccupation += countRessourceOccupation(this.projectsAssignedList);
 
-        if(ressourceOccupation > 100){
-            canAcceptWork = false;
+        //Add all newly assigned projects into the "all projects list"
+        //Since it uses that weird List structure, we need to use a do..while and iterate
+        //through all the projects and merge it into the allProjects list
+        ProjectList newlyAssigned = this.projectsAssignedList;
+        newlyAssigned.goToFrontOfList();
+        do {
+            p = newlyAssigned.getNextProject();
+
+            if( p != null) {
+                allProjects.addProject(p);
+            }
+
         }
+        while(p != null);
+
+        //Reset that index
+        allProjects.goToFrontOfList();
+
+        //Attemt to get all possible project overlaps.
+        List overlaps =  getAllOverlaps(allProjects);
+        ProjectList overlapsPl;
+
+        //Again, that silly do..while
+        do{
+
+            overlapsPl = (ProjectList) overlaps.getItemFromList();
+
+            //Try catch with no error handling? This is what happens when there's not .isEmpty() method in a custom built list.
+            // YOLO
+            try{
+                overlapsPl.addProject(toBeAssignedProject);
+
+                ressourceOccupation = countRessourceOccupation(overlapsPl);
+
+                if(ressourceOccupation > 100){
+                    canAcceptWork = false;
+                }
+
+            }  catch (NullPointerException e){
+
+            }
+
+        } while(overlapsPl != null);
 
         return canAcceptWork;
+    }
+
+    private List getAllOverlaps(ProjectList pl){
+
+        Project p;
+        Project p2;
+
+        pl.goToFrontOfList();
+
+        //Secondary list. We need this list since we're gonna be parsing through it a couple of dozen times.
+        ProjectList plist2 = pl;
+
+        List allOverlaps = new List();
+
+        do {
+            p = pl.getNextProject();
+
+
+            if( p != null) {
+
+                ProjectList overlapList = new ProjectList();
+                try{
+
+                    plist2.goToFrontOfList();
+                    do{
+                        p2 = plist2.getNextProject();
+                        //Make sure that p2 is not null and it's not the same project.
+                        if(p2 != null && p.getID() != p2.getID()){
+
+                            //Condition checking to make sure the projects overlap
+                            if(p2.getParsedEndDate().after(p.getParsedStartDate())
+                                    && p2.getParsedStartDate().before(p.getParsedEndDate())){
+                                overlapList.addProject(p);
+                            }
+                        }
+
+                    }   while(p2!=null);
+
+                }
+                catch(NullPointerException e){
+                    System.out.print("** WARNING : Error detected with a Project!  **");
+                }
+
+                //Might return a null list. Doesn't matter, everything works.
+                allOverlaps.appendItemToList(overlapList);
+
+
+            }
+
+        }
+        while(p != null);
+
+        return allOverlaps;
     }
 
     private int countRessourceOccupation(ProjectList pl){
 
         int ressourceOccupation = 0;
 
-        Project p = null;
+        Project p;
 
         pl.goToFrontOfList();
 
