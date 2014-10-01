@@ -1,5 +1,6 @@
 package ca.etsmtl.log430.common;
 
+import java.util.Iterator;
 import java.util.Vector;
 
 /**
@@ -75,4 +76,5 @@ public class List {
 	protected void goToFrontOfList() {
 		vectorIndex = 0;
 	}
+
 }
