@@ -233,7 +233,6 @@ public class Resource {
 
                         if(p2 != null && p.getID().compareToIgnoreCase(p2.getID()) != 0){
 
-                            System.out.println(p2.getID());
                             //Condition checking to make sure the projects overlap
                             if(
                                     (p2.getParsedEndDate().after(p.getParsedStartDate())
@@ -242,7 +241,7 @@ public class Resource {
                                     || p2.getParsedStartDate().equals(p.getParsedStartDate())
                                     ){
                                 overlapList.addProject(p2);
-                                System.out.println(p2.getID());
+
                             }
 
                         }
@@ -254,8 +253,6 @@ public class Resource {
                 catch(NullPointerException e){
                     System.out.print("** WARNING : Error detected with a Project!  **");
                 }
-
-                System.out.println(countRessourceOccupation(overlapList));
                 //Might return a null list. Doesn't matter, everything works.
                 allOverlaps.appendItemToList(overlapList);
 
