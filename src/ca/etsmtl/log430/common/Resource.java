@@ -136,6 +136,7 @@ public class Resource {
         int ressourceOccupation;
         boolean canAcceptWork = true;
 
+        ProjectList allProjectsN = new ProjectList();
         ProjectList allProjects = this.alreadyAssignedProjectList;
 
 
@@ -148,16 +149,30 @@ public class Resource {
             p = newlyAssigned.getNextProject();
 
             if( p != null) {
-                allProjects.addProject(p);
+                allProjectsN.addProject(p);
             }
 
         }
         while(p != null);
 
+
+        do {
+            p = allProjects.getNextProject();
+
+            if( p != null) {
+                allProjectsN.addProject(p);
+            }
+
+        }
+        while(p != null);
+
+
+        allProjects.addProject(toBeAssignedProject);
+
         //Reset that index
         allProjects.goToFrontOfList();
 
-        //Attemt to get all possible project overlaps.
+        //Attemt to get all possible6 project overlaps.
         List overlaps =  getAllOverlaps(allProjects);
         ProjectList overlapsPl;
 
@@ -169,7 +184,7 @@ public class Resource {
             //Try catch with no error handling? This is what happens when there's not .isEmpty() method in a custom built list.
             // YOLO
             try{
-                overlapsPl.addProject(toBeAssignedProject);
+               // overlapsPl.addProject(toBeAssignedProject);
 
                 ressourceOccupation = countRessourceOccupation(overlapsPl);
 
@@ -194,9 +209,12 @@ public class Resource {
         pl.goToFrontOfList();
 
         //Secondary list. We need this list since we're gonna be parsing through it a couple of dozen times.
+
+
         ProjectList plist2 = pl;
 
         List allOverlaps = new List();
+
 
         do {
             p = pl.getNextProject();
@@ -208,17 +226,30 @@ public class Resource {
                 try{
 
                     plist2.goToFrontOfList();
+                    overlapList.addProject(p);
+                    System.out.println(p.getID());
                     do{
                         p2 = plist2.getNextProject();
                         //Make sure that p2 is not null and it's not the same project.
-                        if(p2 != null && p.getID() != p2.getID()){
+
+                        if(p2 != null && p.getID().compareToIgnoreCase(p2.getID()) != 0 ){
+
+
 
                             //Condition checking to make sure the projects overlap
-                            if(p2.getParsedEndDate().after(p.getParsedStartDate())
-                                    && p2.getParsedStartDate().before(p.getParsedEndDate())){
-                                overlapList.addProject(p);
+                            if(
+                                    (p2.getParsedEndDate().after(p.getParsedStartDate())
+                                    && p2.getParsedStartDate().before(p.getParsedEndDate()) )
+                                   || p2.getParsedEndDate().equals(p.getParsedEndDate())
+                                    || p2.getParsedStartDate().equals(p.getParsedStartDate())
+                                    ){
+                                overlapList.addProject(p2);
+                                System.out.println(p2.getID());
+
                             }
+
                         }
+
 
                     }   while(p2!=null);
 
@@ -256,6 +287,8 @@ public class Resource {
 
         }
         while(p != null);
+
+
 
 
         return ressourceOccupation;
