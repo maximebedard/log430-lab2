@@ -167,13 +167,13 @@ public class Resource {
         while(p != null);
 
 
-        allProjects.addProject(toBeAssignedProject);
+       // allProjects.addProject(toBeAssignedProject);
 
         //Reset that index
         allProjects.goToFrontOfList();
 
         //Attemt to get all possible6 project overlaps.
-        List overlaps =  getAllOverlaps(allProjects);
+        List overlaps =  getAllOverlaps(allProjectsN,toBeAssignedProject);
         ProjectList overlapsPl;
 
         //Again, that silly do..while
@@ -184,7 +184,7 @@ public class Resource {
             //Try catch with no error handling? This is what happens when there's not .isEmpty() method in a custom built list.
             // YOLO
             try{
-               // overlapsPl.addProject(toBeAssignedProject);
+                //overlapsPl.addProject(toBeAssignedProject);
 
                 ressourceOccupation = countRessourceOccupation(overlapsPl);
 
@@ -201,7 +201,7 @@ public class Resource {
         return canAcceptWork;
     }
 
-    private List getAllOverlaps(ProjectList pl){
+    private List getAllOverlaps(ProjectList pl, Project toBeAssignedProject){
 
         Project p;
         Project p2;
@@ -209,15 +209,14 @@ public class Resource {
         pl.goToFrontOfList();
 
         //Secondary list. We need this list since we're gonna be parsing through it a couple of dozen times.
-
-
         ProjectList plist2 = pl;
+
 
         List allOverlaps = new List();
 
+        pl.goToFrontOfList();
 
-        do {
-            p = pl.getNextProject();
+            p = toBeAssignedProject;
 
 
             if( p != null) {
@@ -227,15 +226,14 @@ public class Resource {
 
                     plist2.goToFrontOfList();
                     overlapList.addProject(p);
-                    System.out.println(p.getID());
+
                     do{
                         p2 = plist2.getNextProject();
                         //Make sure that p2 is not null and it's not the same project.
 
-                        if(p2 != null && p.getID().compareToIgnoreCase(p2.getID()) != 0 ){
+                        if(p2 != null && p.getID().compareToIgnoreCase(p2.getID()) != 0){
 
-
-
+                            System.out.println(p2.getID());
                             //Condition checking to make sure the projects overlap
                             if(
                                     (p2.getParsedEndDate().after(p.getParsedStartDate())
@@ -245,27 +243,25 @@ public class Resource {
                                     ){
                                 overlapList.addProject(p2);
                                 System.out.println(p2.getID());
-
                             }
 
                         }
 
 
-                    }   while(p2!=null);
+                    }  while(p2!=null);
 
                 }
                 catch(NullPointerException e){
                     System.out.print("** WARNING : Error detected with a Project!  **");
                 }
 
+                System.out.println(countRessourceOccupation(overlapList));
                 //Might return a null list. Doesn't matter, everything works.
                 allOverlaps.appendItemToList(overlapList);
 
 
             }
 
-        }
-        while(p != null);
 
         return allOverlaps;
     }

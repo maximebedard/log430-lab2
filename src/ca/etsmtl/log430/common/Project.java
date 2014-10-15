@@ -155,7 +155,7 @@ public class Project {
             Date projectEndDate = getParsedEndDate();
             Date projectStartDate = getParsedStartDate();
 
-            if(today.after(projectEndDate) || today.before(projectStartDate)){
+            if(today.after(projectEndDate)){
                 ressourceOccupation = 0;
             }
             else{
