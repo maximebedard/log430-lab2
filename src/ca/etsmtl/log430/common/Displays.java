@@ -201,6 +201,8 @@ public class Displays {
             } // if
 
         } // while
+        resource.getPreviouslyAssignedProjectList().goToFrontOfList();
+
     }
 
 	/**
